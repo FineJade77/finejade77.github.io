@@ -9,7 +9,7 @@ image:
 share: true
 ---
 
-General notes and suggestions for customizing **HPSTR**.
+General notes and suggestions for customizing **HPSTR**..
 
 ## Basic Setup for a new Jekyll site
 

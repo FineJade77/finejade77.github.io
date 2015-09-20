@@ -14,6 +14,7 @@ new_page_ext    = "md"  # default new page file extension when using the new_pag
 # Create a new Post or Page #
 #############################
 
+
 # usage rake new_post
 desc "Create a new post in #{posts_dir}"
 task :new_post, :title do |t, args|
