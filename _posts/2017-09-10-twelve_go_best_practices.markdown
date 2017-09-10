@@ -3,7 +3,7 @@ title:  "12个Go最佳实践"
 subtitle: "A best practice is a method or technique that has consistently shown results superior
 to those achieved with other means"
 author: "FineJade"
-avatar: "img/authors/avatar.png"
+avatar: "img/authors/avatar.jpg"
 image: "img/golang.png"
 date:   2017-09-10 16:00:00
 ---
