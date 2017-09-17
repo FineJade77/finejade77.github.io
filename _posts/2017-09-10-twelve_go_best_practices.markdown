@@ -6,6 +6,7 @@ author: "FineJade"
 avatar: "img/authors/avatar.jpg"
 image: "img/golang.png"
 date:   2017-09-10 16:00:00
+comments: true
 ---
 
 ### 1.避免代码嵌套
