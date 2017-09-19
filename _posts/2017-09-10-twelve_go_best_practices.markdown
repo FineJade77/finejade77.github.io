@@ -359,11 +359,10 @@ func broadcastMsg(msg string, addrs []string) error {
     }
     return nil
 }
-
 {% highlight %}
 
 ### 参考
-* 视频[https://www.youtube.com/watch?v=8D3Vmm1BGoY](https://www.youtube.com/watch?v=8D3Vmm1BGoY)
-* Slide[https://talks.golang.org/2013/bestpractices.slide#1](https://talks.golang.org/2013/bestpractices.slide#1)
+* 视频: [https://www.youtube.com/watch?v=8D3Vmm1BGoY](https://www.youtube.com/watch?v=8D3Vmm1BGoY)
+* Slide: [https://talks.golang.org/2013/bestpractices.slide#1](https://talks.golang.org/2013/bestpractices.slide#1)
 
 
