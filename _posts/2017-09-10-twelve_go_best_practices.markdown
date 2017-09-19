@@ -11,7 +11,7 @@ comments: true
 
 ### 1.避免代码嵌套
 例子：
-`
+```
 type Gopher struct {
     Name     string
     AgeYears int
@@ -34,9 +34,10 @@ func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     }
     return
 }
-`
+```
+
 改进：
-`
+```
 func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     err = binary.Write(w, binary.LittleEndian, int32(len(g.Name)))
     // handle err first
@@ -55,12 +56,13 @@ func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     }
     return
 }
-`
+```
+
 *可读性更强
 
 ### 2.尽量避免重复代码
 继续改进：
-`
+```
 type Gopher struct {
         Name     string
         AgeYears int
@@ -89,13 +91,13 @@ func (g *Gopher) WriteTo(w io.Writer) (int64, error) {
         bw.Write(int64(g.AgeYears))
         return bw.size, bw.err
 }
-`
+```
 *使用binWriter减少Write()和size++
 
 ### 3.优先重要代码
 * License信息, build tags, 包文档
 * 包导入 优先内部包，然后第三方包
-`
+```
 /*
 	License
 */
@@ -108,10 +110,10 @@ import (
 
     "golang.org/x/net/websocket"
 )
-`
+```
 
 ### 4.代码注释
-`
+```
 // Package playground registers an HTTP handler at "/compile" that
 // proxies requests to the golang.org playground service.
 package playground
@@ -125,19 +127,19 @@ type Author struct {
 // This is used to display the author' name, job title, and company
 // without the contact details.
 func (p *Author) TextElem() (elems []Elem)
-`
+```
 *可以生成代码文档  命令godoc
 
 ### 5.命名尽量简短
-* 尽量用短的能解释清楚的词
+* 尽量用短的能解释清楚的词<br>
   MarshalIndent比MarshalWithIndentation好
-* 包名出现在标识前面，因此标识中不在需要包含包相关信息
+* 包名出现在标识前面，因此标识中不在需要包含包相关信息<br>
   encode/json中的Encoder不应该用JSONEncoder(json.Encoder vs json.JSONEncoder)
 
 ### 6.Package比较大可拆成多个文件
-* 将比较大的包，拆成多个文件。
-  eg.标准库中 net/http 包有47个文件，共计 15734 行
-* 分开代码文件和测试文件。
+* 将比较大的包，拆成多个文件。<br>
+  标准库中 net/http 包有47个文件，共计 15734 行
+* 分开代码文件和测试文件。<br>
   net/http/cookie.go和net/http/cookie_test.go都属于包net/http
 * 一个包有多个文件时，很方便创建doc.go来包含包文档注释
 
@@ -146,7 +148,7 @@ func (p *Author) TextElem() (elems []Elem)
 
 ### 8.明确需求
 让我们以之前的Gopher类型为例
-`
+```
 type Gopher struct {
     Name     string
     Age      int32
@@ -161,10 +163,10 @@ func (g *Gopher) DumpToReadWriter(rw io.ReadWriter) error {}
 
 // 进而，使用接口，我们可以只请求我们需要的.
 func (g *Gopher) DumpToWriter(f io.Writer) error {}
-`
+```
 
 ### 9.保持包独立性
-`
+```
 import (
     "golang.org/x/talks/2013/bestpractices/funcdraw/drawer"
     "golang.org/x/talks/2013/bestpractices/funcdraw/parser"
@@ -183,12 +185,12 @@ err = png.Encode(os.Stdout, m)
 if err != nil {
     log.Fatalf("encode image: %v", err)
 }
-`
+```
 *radix.v2[https://github.com/mediocregopher/radix.v2](https://github.com/mediocregopher/radix.v2)
 
 ### 10.避免方法内并发
 方法内并发例子：
-`
+```
 func doConcurrently(job string, err chan error) {
     go func() {
         fmt.Println("doing job", job)
@@ -210,10 +212,12 @@ func main() {
         }
     }
 }
-`
+```
+
 我想要串行执行怎么办？
+
 改进：
-`
+```
 func do(job string) error {
     fmt.Println("doing job", job)
     time.Sleep(1 * time.Second)
@@ -235,12 +239,13 @@ func main() {
         }
     }
 }
-`
+```
+
 *既可以并发调用，也可以串行调用
 
 ### 11.使用goroutines管理状态
 例子：
-`
+```
 type Server struct{ quit chan bool }
 
 func NewServer() *Server {
@@ -276,12 +281,12 @@ func main() {
     time.Sleep(2 * time.Second)
     s.Stop()
 }
-`
+```
 *用channel或者包含channel的结构体和Goroutine通讯
 
 ### 12.避免goroutine内存泄露
 * 内存泄漏例子：
-`
+```
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error)
     for _, addr := range addrs {
@@ -298,13 +303,14 @@ func broadcastMsg(msg string, addrs []string) error {
     }
     return nil
 }
-`
+```
+
 *goroutine阻塞在写操作上
 *goroutine保持对channel的引用
 *channel不会被垃圾回收器GC回收
 
 * 使用带缓存的channel处理
-`
+```
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error, len(addrs))
     for _, addr := range addrs {
@@ -321,11 +327,12 @@ func broadcastMsg(msg string, addrs []string) error {
     }
     return nil
 }
-`
+```
+
 *如果不知道channel大小，该如何处理？
 
 * 使用quit channel
-`
+```
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error)
     quit := make(chan struct{})
@@ -351,7 +358,7 @@ func broadcastMsg(msg string, addrs []string) error {
     return nil
 }
 
-`
+```
 
 ### 参考
 * 视频[https://www.youtube.com/watch?v=8D3Vmm1BGoY](https://www.youtube.com/watch?v=8D3Vmm1BGoY)
