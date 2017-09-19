@@ -10,8 +10,9 @@ comments: true
 ---
 
 ### 1.避免代码嵌套
+
 例子：
-```
+{% highlight %}
 type Gopher struct {
     Name     string
     AgeYears int
@@ -34,10 +35,10 @@ func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     }
     return
 }
-```
+{% highlight %}
 
 改进：
-```
+{% highlight %}
 func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     err = binary.Write(w, binary.LittleEndian, int32(len(g.Name)))
     // handle err first
@@ -56,13 +57,13 @@ func (g *Gopher) WriteTo(w io.Writer) (size int64, err error) {
     }
     return
 }
-```
+{% highlight %}
 
 *可读性更强
 
 ### 2.尽量避免重复代码
 继续改进：
-```
+{% highlight %}
 type Gopher struct {
         Name     string
         AgeYears int
@@ -91,13 +92,13 @@ func (g *Gopher) WriteTo(w io.Writer) (int64, error) {
         bw.Write(int64(g.AgeYears))
         return bw.size, bw.err
 }
-```
+{% highlight %}
 *使用binWriter减少Write()和size++
 
 ### 3.优先重要代码
 * License信息, build tags, 包文档
 * 包导入 优先内部包，然后第三方包
-```
+{% highlight %}
 /*
 	License
 */
@@ -110,10 +111,10 @@ import (
 
     "golang.org/x/net/websocket"
 )
-```
+{% highlight %}
 
 ### 4.代码注释
-```
+{% highlight %}
 // Package playground registers an HTTP handler at "/compile" that
 // proxies requests to the golang.org playground service.
 package playground
@@ -127,7 +128,7 @@ type Author struct {
 // This is used to display the author' name, job title, and company
 // without the contact details.
 func (p *Author) TextElem() (elems []Elem)
-```
+{% highlight %}
 *可以生成代码文档  命令godoc
 
 ### 5.命名尽量简短
@@ -148,7 +149,7 @@ func (p *Author) TextElem() (elems []Elem)
 
 ### 8.明确需求
 让我们以之前的Gopher类型为例
-```
+{% highlight %}
 type Gopher struct {
     Name     string
     Age      int32
@@ -163,10 +164,10 @@ func (g *Gopher) DumpToReadWriter(rw io.ReadWriter) error {}
 
 // 进而，使用接口，我们可以只请求我们需要的.
 func (g *Gopher) DumpToWriter(f io.Writer) error {}
-```
+{% highlight %}
 
 ### 9.保持包独立性
-```
+{% highlight %}
 import (
     "golang.org/x/talks/2013/bestpractices/funcdraw/drawer"
     "golang.org/x/talks/2013/bestpractices/funcdraw/parser"
@@ -185,12 +186,12 @@ err = png.Encode(os.Stdout, m)
 if err != nil {
     log.Fatalf("encode image: %v", err)
 }
-```
+{% highlight %}
 *radix.v2[https://github.com/mediocregopher/radix.v2](https://github.com/mediocregopher/radix.v2)
 
 ### 10.避免方法内并发
 方法内并发例子：
-```
+{% highlight %}
 func doConcurrently(job string, err chan error) {
     go func() {
         fmt.Println("doing job", job)
@@ -212,12 +213,12 @@ func main() {
         }
     }
 }
-```
+{% highlight %}
 
 我想要串行执行怎么办？
 
 改进：
-```
+{% highlight %}
 func do(job string) error {
     fmt.Println("doing job", job)
     time.Sleep(1 * time.Second)
@@ -239,13 +240,13 @@ func main() {
         }
     }
 }
-```
+{% highlight %}
 
 *既可以并发调用，也可以串行调用
 
 ### 11.使用goroutines管理状态
 例子：
-```
+{% highlight %}
 type Server struct{ quit chan bool }
 
 func NewServer() *Server {
@@ -281,12 +282,12 @@ func main() {
     time.Sleep(2 * time.Second)
     s.Stop()
 }
-```
+{% highlight %}
 *用channel或者包含channel的结构体和Goroutine通讯
 
 ### 12.避免goroutine内存泄露
 * 内存泄漏例子：
-```
+{% highlight %}
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error)
     for _, addr := range addrs {
@@ -303,14 +304,14 @@ func broadcastMsg(msg string, addrs []string) error {
     }
     return nil
 }
-```
+{% highlight %}
 
 *goroutine阻塞在写操作上
 *goroutine保持对channel的引用
 *channel不会被垃圾回收器GC回收
 
 * 使用带缓存的channel处理
-```
+{% highlight %}
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error, len(addrs))
     for _, addr := range addrs {
@@ -327,12 +328,13 @@ func broadcastMsg(msg string, addrs []string) error {
     }
     return nil
 }
-```
+{% highlight %}
 
 *如果不知道channel大小，该如何处理？
 
 * 使用quit channel
-```
+
+{% highlight %}
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error)
     quit := make(chan struct{})
@@ -358,7 +360,7 @@ func broadcastMsg(msg string, addrs []string) error {
     return nil
 }
 
-```
+{% highlight %}
 
 ### 参考
 * 视频[https://www.youtube.com/watch?v=8D3Vmm1BGoY](https://www.youtube.com/watch?v=8D3Vmm1BGoY)
