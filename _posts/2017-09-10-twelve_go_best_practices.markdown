@@ -10,7 +10,6 @@ comments: true
 ---
 
 ### 1.避免代码嵌套
-
 例子：
 ~~~ go
 type Gopher struct {
@@ -98,6 +97,7 @@ func (g *Gopher) WriteTo(w io.Writer) (int64, error) {
 ### 3.优先重要代码
 * License信息, build tags, 包文档
 * 包导入 优先内部包，然后第三方包
+
 ~~~ go
 /*
 	License
@@ -287,6 +287,7 @@ func main() {
 
 ### 12.避免goroutine内存泄露
 * 内存泄漏例子：
+
 ~~~ go
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error)
@@ -311,6 +312,7 @@ func broadcastMsg(msg string, addrs []string) error {
 *channel不会被垃圾回收器GC回收
 
 * 使用带缓存的channel处理
+
 ~~~ go
 func broadcastMsg(msg string, addrs []string) error {
     errc := make(chan error, len(addrs))
