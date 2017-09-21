@@ -10,7 +10,7 @@ comments: true
 ---
 
 ### 1.避免代码嵌套
-例子：
+
 ~~~ go
 type Gopher struct {
     Name     string
